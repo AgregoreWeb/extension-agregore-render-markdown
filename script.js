@@ -15,6 +15,7 @@ if (document.body.children.length == 1 &&
 				<!DOCTYPE html>
 				<meta charset="utf-8"/>
 				<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+				<link rel="stylesheet" href="agregore://theme/style.css"/>
   				${marked(text)}
 	  		`)
 	  	})
