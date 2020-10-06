@@ -11,12 +11,57 @@ if (document.body.children.length == 1 &&
   fetch(location.href).then(response => {
 	  if (response.headers.get('Content-Type') == 'text/markdown') {
       response.text().then(text => {
+      	postDisplayStylisation = `
+      		(() => {
+				hljs.initHighlightingOnLoad();
+				const toAnchor = document.querySelectorAll('h1[id],h2[id],h3[id],h4[id]')
+				console.log('Anchoring', toAnchor)
+
+				for(let element of toAnchor) {
+					const anchor = document.createElement('a');
+					anchor.setAttribute('href', '#' + element.id)
+					anchor.innerText = '# '
+					element.prepend(anchor)
+				}
+			})()
+
+			const INDENT_HEADINGS = [
+      		'H1',
+      		'H2',
+      		'H3'
+	      	]
+	      	var currentDepth = 0;
+	      	Array.from(document.body.children).forEach(element => {
+	      		if (INDENT_HEADINGS.includes(element.tagName)) {
+	      			currentDepth = element.tagName.slice(-1);
+	      			element.classList.add('depth' + (currentDepth - 1));
+	      		} else element.classList.add('depth' + (currentDepth));
+	      	})
+      	`
+      	indentStyle = `
+      		:root {
+      			--indent: 16px;
+      		}
+      		.depth1 {
+      			padding-left: calc(var(--indent) * 1)
+      		} .depth2 {
+      			padding-left: calc(var(--indent) * 2)
+      		} .depth3 {
+      			padding-left: calc(var(--indent) * 3)
+      		}
+      	`
+
         document.write(`
 				<!DOCTYPE html>
+				<title>${marked.lexer(text).find(({ type }) => type === 'heading').text}</title>
 				<meta charset="utf-8"/>
 				<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 				<link rel="stylesheet" href="agregore://theme/style.css"/>
+				<link rel="stylesheet" href="agregore://theme/highlight.css"/>
+				<style>${indentStyle}</style>
   				${marked(text)}
+  				<script src="agregore://theme/highlight.js"></script>
+  				<script>${postDisplayStylisation}</script>
 	  		`)
 	  	})
     }
