@@ -44,8 +44,9 @@ console.log('Anchoring', toAnchor)
 for(let element of toAnchor) {
   const anchor = document.createElement('a');
   anchor.setAttribute('href', '#' + element.id)
-  anchor.innerText = '# '
-  element.prepend(anchor)
+  anchor.setAttribute('class', 'agregore-header-anchor')
+  element.replaceWith(anchor)
+  anchor.append(element)
 }
 
 const INDENT_HEADINGS = [
