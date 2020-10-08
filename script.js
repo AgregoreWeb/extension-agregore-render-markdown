@@ -15,42 +15,42 @@ document.getElementsByTagName('pre')[0] !== undefined) {
     if (response.headers.get('Content-Type') === 'text/markdown') {
       response.text().then(text => {
         document.write(`
-			<!DOCTYPE html>
-			<title>${marked.lexer(text).find(({ type }) => type === 'heading').text}</title>
-			<meta charset="utf-8"/>
-			<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-			<link rel="stylesheet" href="agregore://theme/style.css"/>
-			<link rel="stylesheet" href="agregore://theme/highlight.css"/>
-			${marked(text)}
-			<script src="agregore://theme/highlight.js"></script>
-			<script>
-				if(window.hljs) hljs.initHighlightingOnLoad();
+      <!DOCTYPE html>
+      <title>${marked.lexer(text).find(({ type }) => type === 'heading').text}</title>
+      <meta charset="utf-8"/>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" href="agregore://theme/style.css"/>
+      <link rel="stylesheet" href="agregore://theme/highlight.css"/>
+      ${marked(text)}
+      <script src="agregore://theme/highlight.js"></script>
+      <script>
+        if(window.hljs) hljs.initHighlightingOnLoad();
 
-				const toAnchor = document.querySelectorAll('h1[id],h2[id],h3[id],h4[id]')
-				console.log('Anchoring', toAnchor)
+        const toAnchor = document.querySelectorAll('h1[id],h2[id],h3[id],h4[id]')
+        console.log('Anchoring', toAnchor)
 
-				for(let element of toAnchor) {
-				  const anchor = document.createElement('a');
-				  anchor.setAttribute('href', '#' + element.id)
-				  anchor.setAttribute('class', 'agregore-header-anchor')
-				  anchor.innerHTML = element.innerHTML
-				  element.innerHTML = anchor.outerHTML
-				}
+        for(let element of toAnchor) {
+          const anchor = document.createElement('a');
+          anchor.setAttribute('href', '#' + element.id)
+          anchor.setAttribute('class', 'agregore-header-anchor')
+          anchor.innerHTML = element.innerHTML
+          element.innerHTML = anchor.outerHTML
+        }
 
-				const INDENT_HEADINGS = [
-				  'H1',
-				  'H2',
-				  'H3'
-				]
-				var currentDepth = 0;
-				Array.from(document.body.children).forEach(element => {
-				  if (INDENT_HEADINGS.includes(element.tagName)) {
-				    currentDepth = element.tagName.slice(-1);
-				    element.classList.add('depth' + (currentDepth - 1));
-				  } else element.classList.add('depth' + (currentDepth));
-				})
-			</script>
-		`)
+        const INDENT_HEADINGS = [
+          'H1',
+          'H2',
+          'H3'
+        ]
+        var currentDepth = 0;
+        Array.from(document.body.children).forEach(element => {
+          if (INDENT_HEADINGS.includes(element.tagName)) {
+            currentDepth = element.tagName.slice(-1);
+            element.classList.add('agregore-depth' + (currentDepth - 1));
+          } else element.classList.add('agregore-depth' + (currentDepth));
+        })
+      </script>
+    `)
       })
     }
   })
