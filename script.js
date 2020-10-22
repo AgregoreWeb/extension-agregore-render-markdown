@@ -1,7 +1,6 @@
 const commonmark = require('commonmark')
 
-if (document.body.children.length === 1 &&
-document.getElementsByTagName('pre')[0] !== undefined) {
+if (document.querySelector("body>pre[style='word-wrap: break-word; white-space: pre-wrap;']") !== undefined) {
   fetch(location.href).then(response => {
     if (response.headers.get('Content-Type') === 'text/markdown') {
       response.text().then(text => {
@@ -11,9 +10,10 @@ document.getElementsByTagName('pre')[0] !== undefined) {
         let parsed = parser.parse(text)
         let rendered = renderer.render(parsed)
 
-        let walker = parsed.walker()
-        while(walker.current.type !== 'heading') walker.next()
-        let title = (walker.current.type === 'heading') ? walker.current.firstChild.literal : 'Markdown Document' // Find relevant page content here?
+        walker = parsed.walker()
+
+        while(walker.current !== null && walker.current.type !== 'heading') walker.next()
+        let title = (walker.current !== null) ? walker.current.firstChild.literal : location.href
 
         document.write(`
           <!DOCTYPE html>
