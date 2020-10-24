@@ -12,7 +12,7 @@
 	"content_scripts": [
 		{
 			"matches": ["*"],
-			"js": ["script.js"]
+			"js": ["bundle.js"]
 		}
 	]
 }
