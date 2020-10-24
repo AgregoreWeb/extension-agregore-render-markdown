@@ -1,19 +1,20 @@
+/* global location, fetch */
 const commonmark = require('commonmark')
 
 if (document.querySelector("body>pre[style='word-wrap: break-word; white-space: pre-wrap;']") !== undefined) {
   fetch(location.href).then(response => {
     if (response.headers.get('Content-Type') === 'text/markdown') {
       response.text().then(text => {
-        let parser = new commonmark.Parser()
-        let renderer = new commonmark.HtmlRenderer()
+        const parser = new commonmark.Parser()
+        const renderer = new commonmark.HtmlRenderer()
 
-        let parsed = parser.parse(text)
-        let rendered = renderer.render(parsed)
+        const parsed = parser.parse(text)
+        const rendered = renderer.render(parsed)
 
-        walker = parsed.walker()
+        const walker = parsed.walker()
 
-        while(walker.current !== null && walker.current.type !== 'heading') walker.next()
-        let title = (walker.current !== null) ? walker.current.firstChild.literal : location.href
+        while (walker.current !== null && walker.current.type !== 'heading') walker.next()
+        const title = (walker.current !== null) ? walker.current.firstChild.literal : location.href
 
         document.write(`
           <!DOCTYPE html>
