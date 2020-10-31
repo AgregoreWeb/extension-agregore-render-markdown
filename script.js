@@ -15,7 +15,7 @@
 			<meta charset="utf-8"/>
 			<meta http-equiv="Content-Type" content="text/html charset=utf-8"/>
 			<link rel="stylesheet" href="agregore://theme/style.css"/>
-			<link rel="stylesheet" href="agregore://theme/highlight.css"/> ${''/* TODO: api-render-markdown currently forces monokai-sublime */}
+			<link rel="stylesheet" href="agregore://theme/highlight.css"/>
 			${rendered}
 			<script>
 				document.title = document.querySelector('h1,h2,h3')?.innerText || location.href
