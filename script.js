@@ -1,7 +1,7 @@
 (async () => {
 	const defaultTextPreSelector = "body>pre[style='word-wrap: break-word; white-space: pre-wrap;']",
 		markdownContentType = 'text/markdown',
-		markdownAPILocation = 'hyper://7a9332a74279a911bd01e5d016fed0d790256637c3dc4423635b4ab3d9074880/index.js'
+		markdownAPILocation = 'hyper://7a9332a74279a911bd01e5d016fed0d790256637c3dc4423635b4ab3d9074880+611/index.js'
 
 	let response
 
