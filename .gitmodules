@@ -1,0 +1,3 @@
+[submodule "api-render-markdown"]
+	path = api-render-markdown
+	url = https://github.com/AgregoreWeb/api-render-markdown/
