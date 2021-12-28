@@ -1,59 +1,58 @@
-/* global location, fetch */
-const commonmark = require('commonmark')
+/* global location */
 
-if (document.querySelector("body>pre[style='word-wrap: break-word; white-space: pre-wrap;']") !== undefined) {
-  fetch(location.href).then(response => {
-    if (response.headers.get('Content-Type') === 'text/markdown') {
-      response.text().then(text => {
-        const parser = new commonmark.Parser()
-        const renderer = new commonmark.HtmlRenderer()
+console.log('Preparing markdown render', document.contentType)
 
-        const parsed = parser.parse(text)
-        const rendered = renderer.render(parsed)
+if (document.contentType === 'text/markdown') {
+  const commonmark = require('commonmark')
 
-        const walker = parsed.walker()
+  // Might only work on Chromium
+  const text = document.querySelector('pre').innerText
 
-        while (walker.current !== null && walker.current.type !== 'heading') walker.next()
-        const title = (walker.current !== null) ? walker.current.firstChild.literal : location.href
+  const parser = new commonmark.Parser()
+  const renderer = new commonmark.HtmlRenderer()
 
-        document.write(`
-          <!DOCTYPE html>
-          <title>${title}</title>
-          <meta charset="utf-8"/>
-          <meta http-equiv="Content-Type" content="text/html charset=utf-8"/>
-          <link rel="stylesheet" href="agregore://theme/style.css"/>
-          <link rel="stylesheet" href="agregore://theme/highlight.css"/>
-          ${rendered}
-          <script src="agregore://theme/highlight.js"></script>
-          <script>
-            if(window.hljs) hljs.initHighlightingOnLoad()
+  const parsed = parser.parse(text)
+  const rendered = renderer.render(parsed)
 
-            const toAnchor = document.querySelectorAll('h1[id],h2[id],h3[id],h4[id]')
-            console.log('Anchoring', toAnchor)
+  const walker = parsed.walker()
 
-            for(let element of toAnchor) {
-              const anchor = document.createElement('a')
-              anchor.setAttribute('href', '#' + element.id)
-              anchor.setAttribute('class', 'agregore-header-anchor')
-              anchor.innerHTML = element.innerHTML
-              element.innerHTML = anchor.outerHTML
-            }
+  while (walker.current !== null && walker.current.type !== 'heading') walker.next()
+  const title = (walker.current !== null) ? walker.current.firstChild.literal : location.href
 
-            const INDENT_HEADINGS = [
-              'H1',
-              'H2',
-              'H3'
-            ]
-            var currentDepth = 0
-            Array.from(document.body.children).forEach(element => {
-              if (INDENT_HEADINGS.includes(element.tagName)) {
-                currentDepth = element.tagName.slice(-1)
-                element.classList.add('agregore-depth' + (currentDepth - 1))
-              } else element.classList.add('agregore-depth' + (currentDepth))
-            })
-          </script>
-        `)
-      })
-    }
+  document.write(`
+<!DOCTYPE html>
+<title>${title}</title>
+<meta charset="utf-8"/>
+<meta http-equiv="Content-Type" content="text/html charset=utf-8"/>
+<link rel="stylesheet" href="agregore://theme/style.css"/>
+<link rel="stylesheet" href="agregore://theme/highlight.css"/>
+${rendered}
+<script src="agregore://theme/highlight.js"></script>
+<script>
+  if(window.hljs) hljs.initHighlightingOnLoad()
+
+  const toAnchor = document.querySelectorAll('h1[id],h2[id],h3[id],h4[id]')
+  console.log('Anchoring', toAnchor)
+
+  for(let element of toAnchor) {
+    const anchor = document.createElement('a')
+    anchor.setAttribute('href', '#' + element.id)
+    anchor.setAttribute('class', 'agregore-header-anchor')
+    anchor.innerHTML = element.innerHTML
+    element.innerHTML = anchor.outerHTML
+  }
+
+  const INDENT_HEADINGS = [
+    'H1',
+    'H2',
+    'H3'
+  ]
+  var currentDepth = 0
+  Array.from(document.body.children).forEach(element => {
+    if (INDENT_HEADINGS.includes(element.tagName)) {
+      currentDepth = element.tagName.slice(-1)
+      element.classList.add('agregore-depth' + (currentDepth - 1))
+    } else element.classList.add('agregore-depth' + (currentDepth))
   })
+</script>`)
 }
