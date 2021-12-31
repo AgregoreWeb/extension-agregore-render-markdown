@@ -1,23 +1,15 @@
 /* global location */
-
-console.log('Preparing markdown render', document.contentType)
-
 if (document.contentType === 'text/markdown') {
-  const commonmark = require('commonmark')
+  const marked = require('marked')
 
   // Might only work on Chromium
   const text = document.querySelector('pre').innerText
 
-  const parser = new commonmark.Parser()
-  const renderer = new commonmark.HtmlRenderer()
+  const tokens = marked.lexer(text)
+  const rendered = marked.parser(tokens)
 
-  const parsed = parser.parse(text)
-  const rendered = renderer.render(parsed)
-
-  const walker = parsed.walker()
-
-  while (walker.current !== null && walker.current.type !== 'heading') walker.next()
-  const title = (walker.current !== null) ? walker.current.firstChild.literal : location.href
+  const firstHeading = tokens.find((token) => token.type === 'heading')
+  const title = firstHeading?.text || location.href
 
   document.write(`
 <!DOCTYPE html>
@@ -41,18 +33,5 @@ ${rendered}
     anchor.innerHTML = element.innerHTML
     element.innerHTML = anchor.outerHTML
   }
-
-  const INDENT_HEADINGS = [
-    'H1',
-    'H2',
-    'H3'
-  ]
-  var currentDepth = 0
-  Array.from(document.body.children).forEach(element => {
-    if (INDENT_HEADINGS.includes(element.tagName)) {
-      currentDepth = element.tagName.slice(-1)
-      element.classList.add('agregore-depth' + (currentDepth - 1))
-    } else element.classList.add('agregore-depth' + (currentDepth))
-  })
 </script>`)
 }

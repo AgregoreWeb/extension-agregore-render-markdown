@@ -30,7 +30,7 @@
   },
   "homepage": "https://github.com/RangerMauve/agregore-md-render#readme",
   "dependencies": {
-    "commonmark": "^0.30.0"
+    "marked": "^4.0.8"
   },
   "devDependencies": {
     "browserify": "^17.0.0"
