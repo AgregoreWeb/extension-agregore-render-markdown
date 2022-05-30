@@ -1,17 +1,13 @@
 {
-	"manifest_version": 1,
+	"manifest_version": 2,
 	"name": "agregore-md-render",
 	"version": "1.0",
 
 	"description": "The markdown rendering functionality for the Agregore Browser",
 
-	"permissions": [
-		"activeTab"
-	],
-
 	"content_scripts": [
 		{
-			"matches": ["*"],
+			"matches": ["<all_urls>"],
 			"js": ["bundle.js"]
 		}
 	]
